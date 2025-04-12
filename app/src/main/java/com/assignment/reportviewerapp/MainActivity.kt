@@ -11,6 +11,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.assignment.reportviewerapp.ui.screens.HomeScreen
+import com.assignment.reportviewerapp.ui.screens.ImageSelectionScreen
+import com.assignment.reportviewerapp.ui.screens.ListScreen
+import com.assignment.reportviewerapp.ui.screens.LoginScreen
+import com.assignment.reportviewerapp.ui.screens.PdfViewerScreen
+import com.assignment.reportviewerapp.ui.screens.SplashScreen
 import com.assignment.reportviewerapp.ui.theme.ReportViewerAppTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +28,37 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ReportViewerAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainNavHost()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MainNavHost() {
+    val navController = rememberNavController()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ReportViewerAppTheme {
-        Greeting("Android")
+    NavHost(
+        navController = navController,
+        startDestination = "splash_screen"
+    ) {
+        composable("splash_screen") {
+            SplashScreen(navController)
+        }
+        composable("login_screen") {
+            LoginScreen(navController)
+        }
+        composable("home_screen") {
+            HomeScreen(navController)
+        }
+        composable("pdf_viewer_screen") {
+            PdfViewerScreen(navController)
+        }
+        composable("image_selection_screen") {
+            ImageSelectionScreen(navController)
+        }
+        composable("list_screen") {
+            ListScreen(navController)
+        }
     }
 }

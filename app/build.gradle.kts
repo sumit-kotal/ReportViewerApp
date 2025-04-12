@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.assignment.reportviewerapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.assignment.reportviewerapp"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -51,13 +51,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)  // Compose graphics utilities
     implementation(libs.androidx.ui.tooling.preview)  // Compose UI tooling preview
     implementation(libs.androidx.material3)  // Material3 components
+    implementation(libs.androidx.material.icons.extended)
 
     // Retrofit for API calls
     implementation(libs.retrofit)  // Retrofit for network requests
     implementation(libs.retrofit.gson)  // Gson converter for Retrofit
 
     // Room DB for local storage
-    implementation(libs.room.runtime)  // Room runtime for database access
+    implementation(libs.room.runtime)
+    implementation(libs.androidx.navigation.compose)  // Room runtime for database access
     annotationProcessor(libs.room.compiler)  // Room compiler for annotation processing
 
     // Firebase libraries

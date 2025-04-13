@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("kotlin-kapt")
 }
 
 android {
@@ -82,5 +83,22 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)  // Compose UI tooling
     debugImplementation(libs.androidx.ui.test.manifest)  // Manifest for Compose testing
 
-    implementation ("androidx.webkit:webkit:1.13.0")
+    implementation (libs.androidx.webkit)
+
+    // Retrofit for API calls
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+
+    // Room for local database
+    implementation(libs.room.runtime)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+
+    // Gson for JSON parsing
+    implementation(libs.gson)
+
+    // Coroutine support for Room and Retrofit
+    implementation(libs.coroutines.android)
+
+
 }

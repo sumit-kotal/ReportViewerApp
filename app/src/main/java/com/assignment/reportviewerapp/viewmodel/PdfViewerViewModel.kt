@@ -1,18 +1,10 @@
 package com.assignment.reportviewerapp.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.assignment.reportviewerapp.model.PdfViewerState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
-
-data class PdfViewerState(
-    val isLoading: Boolean = true,
-    val errorMessage: String? = null,
-    val currentPdfUrl: String = "",
-    val userInputUrl: String = ""
-)
 
 class PdfViewerViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(PdfViewerState())

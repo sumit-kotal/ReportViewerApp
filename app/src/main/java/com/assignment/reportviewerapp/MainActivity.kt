@@ -7,9 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.assignment.reportviewerapp.ui.screens.HomeScreen
 import com.assignment.reportviewerapp.ui.ImageSelectionActivity
 import com.assignment.reportviewerapp.ui.screens.ListScreen
@@ -19,6 +21,7 @@ import com.assignment.reportviewerapp.ui.screens.SplashScreen
 import com.assignment.reportviewerapp.ui.theme.ReportViewerAppTheme
 import com.assignment.reportviewerapp.viewmodel.ImageSelectionViewModel
 import org.koin.androidx.compose.koinViewModel
+import java.net.URLDecoder
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +29,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             ReportViewerAppTheme {
                 val navController = rememberNavController()
-                val context = LocalContext.current
-                val viewModel: ImageSelectionViewModel = koinViewModel()
 
                 val onNavigateToImageSelection: () -> Unit = {
                     val intent = Intent(this, ImageSelectionActivity::class.java)
@@ -62,7 +63,7 @@ fun MainNavHost(
             HomeScreen(navController,onNavigateToImageSelection)
         }
         composable("pdf_viewer_screen") {
-            PdfViewerScreen(navController)
+            PdfViewerScreen(navController = navController)
         }
         composable("image_selection_screen") {
         }

@@ -81,4 +81,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)  // Compose testing JUnit support
     debugImplementation(libs.androidx.ui.tooling)  // Compose UI tooling
     debugImplementation(libs.androidx.ui.test.manifest)  // Manifest for Compose testing
+
+    implementation ("androidx.webkit:webkit:1.13.0")
 }

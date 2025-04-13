@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class ImageSelectionViewModel : ViewModel() {
-    // Use mutableStateOf instead of StateFlow for better Compose integration
     private val _imageUri = mutableStateOf<Uri?>(null)
     val imageUri: State<Uri?> = _imageUri
 

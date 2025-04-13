@@ -100,5 +100,13 @@ dependencies {
     // Coroutine support for Room and Retrofit
     implementation(libs.coroutines.android)
 
+    // In build.gradle (Module: app)
+
+        // Google SignIn dependencies
+        implementation("com.google.android.gms:play-services-auth:21.3.0")
+        implementation("com.google.firebase:firebase-auth:21.3.0")
+
+        // For SharedPreferences handling (Jetpack Core)
+        implementation("androidx.preference:preference-ktx:1.2.1")
 
 }

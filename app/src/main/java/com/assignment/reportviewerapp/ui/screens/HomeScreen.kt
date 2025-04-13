@@ -3,6 +3,7 @@ package com.assignment.reportviewerapp.ui.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.List
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PictureAsPdf
@@ -19,7 +20,7 @@ import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController,onNavigateToImageSelection: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -42,7 +43,7 @@ fun HomeScreen(navController: NavController) {
                 style = MaterialTheme.typography.bodyLarge
             )
 
-            // Button for PDF Viewer
+            // PDF Viewer
             Button(
                 onClick = { navController.navigate("pdf_viewer_screen") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -52,9 +53,9 @@ fun HomeScreen(navController: NavController) {
                 Text("PDF Viewer")
             }
 
-            // Button for Image Selection
+            // Image Selection
             Button(
-                onClick = { navController.navigate("image_selection_screen") },
+                onClick = { onNavigateToImageSelection() },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
                 Icon(Icons.Filled.PhotoCamera, contentDescription = "Image Selection", modifier = Modifier.size(24.dp))
@@ -62,7 +63,7 @@ fun HomeScreen(navController: NavController) {
                 Text("Image Selection")
             }
 
-            // Button for List
+            // List
             Button(
                 onClick = { navController.navigate("list_screen") },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -71,12 +72,20 @@ fun HomeScreen(navController: NavController) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text("List")
             }
+
+
+            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
+
+            Button(
+                onClick = { navController.navigate("login_screen") },
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Logout")
+            }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController())
 }

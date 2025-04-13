@@ -68,6 +68,7 @@ dependencies {
 
     // Koin for Dependency Injection
     implementation(libs.koin.android)  // Koin for Android DI
+    implementation(libs.koin.androidx.compose)  // This provides koinViewModel()
 
     // Image loading
     implementation(libs.coil.compose)  // Coil for image loading in Compose

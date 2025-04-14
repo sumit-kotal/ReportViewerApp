@@ -24,14 +24,21 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.assignment.reportviewerapp.utils.AppPreferences
+import org.koin.compose.koinInject
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavController,onNavigateToImageSelection: () -> Unit) {
+
+    val context = LocalContext.current
+    val appPreferences: AppPreferences = koinInject()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -92,7 +99,10 @@ fun HomeScreen(navController: NavController,onNavigateToImageSelection: () -> Un
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = { navController.navigate("login_screen") },
+                onClick = {
+                    appPreferences.isLoggedIn = false
+                    navController.navigate("login_screen")
+                          },
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             ) {
                 Icon(Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout", modifier = Modifier.size(24.dp))

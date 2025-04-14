@@ -1,65 +1,57 @@
 package com.assignment.reportviewerapp.ui.screens
 
-import android.content.Intent
-import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.assignment.reportviewerapp.viewmodel.LoginViewModel
 import org.koin.androidx.compose.koinViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
-import android.content.Context
-import android.content.SharedPreferences
 import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.compose.ui.platform.LocalContext
-import androidx.navigation.compose.rememberNavController
+import com.assignment.reportviewerapp.R
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 
 @Composable
-fun LoginScreen(
-    navController: NavController,
-    viewModel: LoginViewModel = koinViewModel()
-) {
+fun LoginScreen(navController: NavController) {
     val context = LocalContext.current
-    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    val viewModel: LoginViewModel = koinViewModel()
+    val loginState by viewModel.loginState.collectAsState()
 
-    var isSigningIn by remember { mutableStateOf(false) }
+    val googleSignInClient = remember {
+        GoogleSignIn.getClient(
+            context,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(context.getString(R.string.default_web_client_id))
+                .build()
+        )
+    }
 
-    // Google Sign-In configuration
-    val googleSignInClient: GoogleSignInClient = GoogleSignIn.getClient(
-        context, GoogleSignInOptions.DEFAULT_SIGN_IN
-    )
-
-    val signInResultLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+    val signInLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
         try {
-            val account = task.getResult(ApiException::class.java)
-            account?.let {
-                // Save user info to SharedPreferences
-                sharedPreferences.edit().apply {
-                    putString("user_id", it.id)
-                    putString("user_name", it.displayName)
-                    putString("user_email", it.email)
-                    putString("user_photo_url", it.photoUrl.toString())
-                    apply()
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            viewModel.handleSignInResult(task)
+        } catch (e: Exception) {
+            viewModel.handleSignInResult(null)
+        }
+    }
+
+    // Handle login state changes
+    LaunchedEffect(loginState) {
+        when (loginState) {
+            is LoginViewModel.LoginState.Success -> {
+                navController.navigate("home_screen") {
+                    popUpTo("login_screen") { inclusive = true }
                 }
-                // Navigate to the next screen after successful login
-                navController.navigate("home_screen")
             }
-        } catch (e: ApiException) {
-            // Handle sign-in error
-            e.printStackTrace()
+            else -> {}
         }
     }
 
@@ -72,29 +64,55 @@ fun LoginScreen(
     ) {
         Text("Welcome to the App", style = MaterialTheme.typography.headlineSmall)
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         Button(
             onClick = {
-                isSigningIn = true
-                val signInIntent = googleSignInClient.signInIntent
-                signInResultLauncher.launch(signInIntent)
+                signInLauncher.launch(googleSignInClient.signInIntent)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(0.8f),
+            enabled = loginState !is LoginViewModel.LoginState.Loading
         ) {
             Text("Sign In with Google")
         }
 
+
+        Button(
+            onClick = {
+                viewModel.bypassedLogin()
+            },
+            modifier = Modifier.fillMaxWidth(0.8f),
+            enabled = loginState !is LoginViewModel.LoginState.Loading
+        ) {
+            Text("By pass Google Sign in")
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (isSigningIn) {
-            CircularProgressIndicator()
+        when (loginState) {
+            is LoginViewModel.LoginState.Loading -> CircularProgressIndicator()
+            is LoginViewModel.LoginState.Error -> {
+                val error = (loginState as LoginViewModel.LoginState.Error).message
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = error,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    if (error.contains("network", ignoreCase = true)) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Button(
+                            onClick = {
+                                signInLauncher.launch(googleSignInClient.signInIntent)
+                            }
+                        ) {
+                            Text("Retry")
+                        }
+                    }
+                }
+            }
+            else -> {}
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen(navController = rememberNavController())
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("kotlin-kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -60,7 +61,10 @@ dependencies {
 
     // Room DB for local storage
     implementation(libs.room.runtime)
-    implementation(libs.androidx.navigation.compose)  // Room runtime for database access
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.credentials)
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.googleid)  // Room runtime for database access
     annotationProcessor(libs.room.compiler)  // Room compiler for annotation processing
 
     // Firebase libraries

@@ -20,6 +20,7 @@ import com.assignment.reportviewerapp.ui.screens.PdfViewerScreen
 import com.assignment.reportviewerapp.ui.screens.SplashScreen
 import com.assignment.reportviewerapp.ui.theme.ReportViewerAppTheme
 import com.assignment.reportviewerapp.viewmodel.ImageSelectionViewModel
+import com.google.firebase.messaging.FirebaseMessaging
 import org.koin.androidx.compose.koinViewModel
 import java.net.URLDecoder
 
@@ -41,8 +42,32 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                println("FCM registration token failed")
+                return@addOnCompleteListener
+            }
+
+            // Get the new FCM token
+            val token = task.result
+            println("FCM Registration Token: $token")
+
+        }
+
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@addOnCompleteListener
+            }
+            // Get the refreshed FCM token
+            val token = task.result
+            println("Refreshed token: $token")
+        }
     }
 }
+
+
 
 @Composable
 fun MainNavHost(
@@ -51,7 +76,7 @@ fun MainNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "splash_screen"  // Change this to the desired start screen
+        startDestination = "splash_screen"
     ) {
         composable("splash_screen") {
             SplashScreen(navController)

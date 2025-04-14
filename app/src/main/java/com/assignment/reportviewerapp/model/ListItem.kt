@@ -5,13 +5,13 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "list_items")
 data class ListItem(
-    @PrimaryKey val id: String, // id is a string in the API response
+    @PrimaryKey val id: String,
     val name: String,
-    val color: String?, // color as a field, some items may not have color
-    val capacity: String?, // capacity as a field, some items may not have capacity
-    val price: Double?, // price as a field, some items may not have price
-    val generation: String?, // generation as a field, if present
-    val year: Int?, // year as a field, if present
-    val cpuModel: String?, // cpu model as a field, if present
-    val hardDiskSize: String? // hard disk size as a field, if present
+    val color: String?,
+    val capacity: String?,
+    val price: Double?,
+    val generation: String?,
+    val year: Int?,
+    val cpuModel: String?,
+    val hardDiskSize: String?
 )

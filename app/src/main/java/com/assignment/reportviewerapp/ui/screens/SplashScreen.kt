@@ -18,11 +18,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.assignment.reportviewerapp.R
 import com.assignment.reportviewerapp.ui.theme.ReportViewerAppTheme
+import com.assignment.reportviewerapp.utils.AppPreferences
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun SplashScreen(navController: NavController) {
     val context = LocalContext.current
+    val appPreferences: AppPreferences = koinInject()
 
     Image(
         painter = painterResource(id = R.drawable.logo),
@@ -33,7 +37,15 @@ fun SplashScreen(navController: NavController) {
     )
 
     LaunchedEffect(Unit) {
-        delay(2000)
-        navController.navigate("login_screen")
+        delay(2000) // Show splash for 2 seconds
+        if (appPreferences.isLoggedIn) {
+            navController.navigate("home_screen") {
+                popUpTo("splash_screen") { inclusive = true }
+            }
+        } else {
+            navController.navigate("login_screen") {
+                popUpTo("splash_screen") { inclusive = true }
+            }
+        }
     }
 }
